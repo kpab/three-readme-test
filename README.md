@@ -1,16 +1,18 @@
 # three-readme — camo 再生テスト
 
-GitHub の `<img>`（camo 経由）で、headless SVGRenderer が焼いた CSS `steps()` フリップブックが**アニメ再生されるか**を確認するための捨てリポジトリ用 README。
+GitHub の `<img>`（camo 経由）で、headless SVGRenderer が焼いた **SMIL アニメSVG** が再生されるかを確認するための捨てリポジトリ用 README。
 
-判定基準：下の図がブラウザ（手元）と同じく、GitHub 上でも回っていれば論点2はクリア。静止画で固まっていたら camo / サニタイザがアニメを潰している。
+判定基準：下の図がブラウザ（手元）と同じく GitHub 上でも回っていれば論点2はクリア。静止画で固まっていたら GitHub 側がアニメを潰している。
+
+> 注：初版は CSS `steps()` 方式で、SVGO の `inlineStyles` が `animation` 本体を落として全フレーム重なり表示になっていた。SMIL `<animate>`（opacity の one-hot 切替）に変更し、SVGO もアニメ非破壊プラグインのみに絞って再生成済み。
 
 ## 1. Markdown 埋め込み（本命）
 
-torus knot / 24フレーム / ~101KB
+torus knot / 24フレーム / ~113KB
 
 ![torusknot](./torusknot-wire-24f.svg)
 
-icosahedron / 36フレーム / ~37KB
+icosahedron / 36フレーム / ~53KB
 
 ![icosahedron](./ico-wire-36f.svg)
 
@@ -25,12 +27,11 @@ icosahedron / 36フレーム / ~37KB
 
 - [ ] markdown 埋め込みで再生される
 - [ ] HTML `<img>` + width 指定で再生される
-- [ ] ダーク／ライト両テーマで視認できる（現状 stroke は固定色 `#4f9cff`）
+- [ ] ダーク／ライト両テーマで視認できる（現状 stroke 固定色 `#4f9cff`）
 - [ ] モバイル（GitHub アプリ）でも再生される
-- [ ] 透過背景がテーマ背景と干渉しない
 
 ## メモ
 
 - 生成物コミット方式（`snk` と同型）。README は `![](path.svg)` 1行のみ。
-- camo は積極キャッシュするので、SVG 差し替え後に絵が更新されない場合は URL に `?v=2` 等を付けて確認。
-- 再生されなかった場合の切り分け順：① 生 SVG を raw で開く（ファイル自体は正しいか）→ ② CSS animation を `<img>` 文脈が許可しているか → ③ camo がサニタイズで `<style>` を落としていないか。
+- 差し替え後に絵が変わらない場合は camo キャッシュ。URL に `?v=2` を付けて確認。
+- 今回の教訓：アニメを `<style>`/CSS に置くと SVGO とサニタイズの両方で壊れやすい。SMIL 属性に寄せるのが堅い。
